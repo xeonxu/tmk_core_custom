@@ -77,6 +77,7 @@ bool command_proc(uint8_t code)
                 return false;
             return (command_extra(code) || command_common(code));
             break;
+#ifdef CONSOLE_ENABLE
         case CONSOLE:
             if (IS_COMMAND())
                 return (command_extra(code) || command_common(code));
@@ -87,6 +88,7 @@ bool command_proc(uint8_t code)
         case MOUSEKEY:
             mousekey_console(code);
             break;
+#endif
 #endif
         default:
             command_state = ONESHOT;
@@ -118,10 +120,12 @@ bool command_console_extra(uint8_t code)
 static void command_common_help(void)
 {
     print("\n\t- Magic -\n"
+#ifndef NO_DEBUG
           "d:	debug\n"
           "x:	debug matrix\n"
           "k:	debug keyboard\n"
           "m:	debug mouse\n"
+#endif
           "v:	version\n"
           "s:	status\n"
           "c:	console mode\n"
@@ -222,6 +226,7 @@ static bool command_common(uint8_t code)
         case KC_SLASH: /* ? */
             command_common_help();
             break;
+#ifdef CONSOLE_ENABLE
         case KC_C:
             debug_matrix   = false;
             debug_keyboard = false;
@@ -231,12 +236,14 @@ static bool command_common(uint8_t code)
             print("C> ");
             command_state = CONSOLE;
             break;
+#endif
         case KC_PAUSE:
             clear_keyboard();
             print("\n\nbootloader... ");
             wait_ms(1000);
             bootloader_jump(); // not return
             break;
+#ifndef NO_DEBUG
         case KC_D:
             if (debug_enable) {
                 print("\ndebug: off\n");
@@ -276,6 +283,7 @@ static bool command_common(uint8_t code)
                 print("\nmouse: off\n");
             }
             break;
+#endif
         case KC_V: // print version & information
             print("\n\t- Version -\n");
             print("DESC: " STR(DESCRIPTION) "\n");
