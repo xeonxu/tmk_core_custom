@@ -73,7 +73,7 @@ uint32_t reset_key  __attribute__ ((section (".noinit")));
 
 #ifdef HID_MOUSE_ENABLE
 #define HIDMOUSE_RESET_KEY 0xB00730C5
-extern uint8_t use_hidmouse;
+extern bool use_hidmouse;
 #endif
 
 /* initialize MCU status by watchdog reset */
