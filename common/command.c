@@ -131,7 +131,9 @@ static void command_common_help(void)
           "c:	console mode\n"
           "0-4:	layer0-4(F10-F4)\n"
           "Paus:	bootloader\n"
-
+#ifdef HID_COMPOSITE_ENABLE
+          "Ins:	 Switch hid mouse support\n"
+#endif
 #ifdef KEYBOARD_LOCK_ENABLE
           "Caps:	Lock\n"
 #endif
@@ -243,6 +245,14 @@ static bool command_common(uint8_t code)
             wait_ms(1000);
             bootloader_jump(); // not return
             break;
+#ifdef HID_COMPOSITE_ENABLE
+        case KC_INSERT:
+            clear_keyboard();
+            print("\n\nSwitch hid mouse support... ");
+            wait_ms(1000);
+            reboot_to_hidmouse(); // not return
+            break;
+#endif
 #ifndef NO_DEBUG
         case KC_D:
             if (debug_enable) {
