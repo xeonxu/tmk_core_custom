@@ -71,7 +71,7 @@
 #define BOOTLOADER_RESET_KEY 0xB007B007
 uint32_t reset_key  __attribute__ ((section (".noinit")));
 
-#ifdef HID_MOUSE_ENABLE
+#ifdef HID_COMPOSITE_ENABLE
 #define HIDMOUSE_RESET_KEY 0xB00730C5
 extern bool use_hidmouse;
 #endif
@@ -98,7 +98,7 @@ void bootloader_jump(void) {
     for (;;);
 }
 
-#ifdef HID_MOUSE_ENABLE
+#ifdef HID_COMPOSITE_ENABLE
 /* initialize MCU status by watchdog reset */
 void reboot_to_hidmouse(void) {
 #ifdef PROTOCOL_LUFA
@@ -141,9 +141,9 @@ void bootloader_jump_after_watchdog_reset(void)
 	    // This is compled into 'icall', address should be in word unit, not byte.
 	    ((void (*)(void))(BOOTLOADER_START/2))();
 	}
-#ifdef HID_MOUSE_ENABLE
+#ifdef HID_COMPOSITE_ENABLE
 	else if (reset_key == HIDMOUSE_RESET_KEY) {
-	    if (use_hidmouse == true) {
+	    if (true == use_hidmouse) {
 		use_hidmouse = false;
 	    }
 	    else {
@@ -158,7 +158,9 @@ void bootloader_jump_after_watchdog_reset(void)
 	    MCUSR &= ~(1<<WDRF);
 	    wdt_disable();
 	    // Continue to main
-
+	}
+	else {
+	    use_hidmouse = false;
 	}
 #endif
     }
