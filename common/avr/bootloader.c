@@ -73,7 +73,7 @@ uint32_t reset_key  __attribute__ ((section (".noinit")));
 
 #ifdef HID_COMPOSITE_ENABLE
 #define HIDMOUSE_RESET_KEY 0xB00730C5
-extern bool use_hidmouse;
+extern bool no_hidmouse;
 #endif
 
 /* initialize MCU status by watchdog reset */
@@ -143,11 +143,11 @@ void bootloader_jump_after_watchdog_reset(void)
 	}
 #ifdef HID_COMPOSITE_ENABLE
 	else if (reset_key == HIDMOUSE_RESET_KEY) {
-	    if (true == use_hidmouse) {
-		use_hidmouse = false;
+	    if (true == no_hidmouse) {
+		no_hidmouse = false;
 	    }
 	    else {
-		use_hidmouse = true;
+		no_hidmouse = true;
 	    }
 	    reset_key = 0;
 
@@ -160,7 +160,7 @@ void bootloader_jump_after_watchdog_reset(void)
 	    // Continue to main
 	}
 	else {
-	    use_hidmouse = false;
+	    no_hidmouse = true;
 	}
 #endif
     }
